@@ -17,6 +17,7 @@ function meta() {
 //
 function onIncomingPacket(packet) {
   echo('  ' + meta().name + '.processIncoming(', packet, ')');
+  return true;
 }
 
 // Process a new packet being sent.

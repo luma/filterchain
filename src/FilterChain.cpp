@@ -5,19 +5,26 @@ FilterChain::FilterChain(std::shared_ptr<Env> env) : env_ {env} {
 }
 
 FilterChain::~FilterChain() {
-  // @todo clean up filters_
+  for (auto &filter : filters_) {
+    // env_->DeleteContext(filter.GetContext());
+  }
+
+  filters_.clear();
   env_.reset();
 }
 
 bool FilterChain::Add(const char *path) {
-  v8::Handle<v8::Context> context = env_->NewContext();
+  // v8::Persistent<v8::Context, v8::CopyablePersistentTraits<v8::Context>> context = env_->NewContext();
   // filters_.emplace_back(context);
 
-  // if (!filters_.back().Load(path)) {
-  //   printf("✘ Could not load filter from %s\n", path);
-  //   return false;
-  // }
+  Filter filter(env_->NewContext());
 
+  if (!filter.Load(path)) {
+    printf("✘ Could not load filter from %s\n", path);
+    return false;
+  }
+
+  filters_.emplace_back(filter);
   return true;
 }
 

@@ -6,16 +6,20 @@
 
 class Env {
  public:
-  Env();
+  Env(v8::Isolate* isolate);
   ~Env();
 
  public:
   inline v8::Isolate* const GetIsolate() { return isolate_; }
-  v8::Handle<v8::Context> NewContext();
+  PersistentContext NewContext();
+  void DeleteContext(v8::Handle<v8::Context> context);
 
  private:
   v8::Isolate* const isolate_;
-  v8::Handle<v8::ObjectTemplate> globalTemplate_;
+  v8::Persistent<v8::ObjectTemplate, v8::CopyablePersistentTraits<v8::ObjectTemplate>> globalTemplate_;
+
+  std::map<v8::Handle<v8::Context>, v8::HandleScope> contexts_;
 };
+
 
 #endif
