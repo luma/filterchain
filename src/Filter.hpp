@@ -11,8 +11,8 @@ class Filter {
 
  public:
   bool Load(const char* fileName);
-  bool ProcessIncoming(const int argc, v8::Handle<v8::Value> args[], v8::Local<v8::Value> &result);
-  bool ProcessOutgoing(const int argc, v8::Handle<v8::Value> argv[], v8::Local<v8::Value> &result);
+  bool ProcessIncoming(const int argc, v8::Handle<v8::Value> args[]);
+  bool ProcessOutgoing(const int argc, v8::Handle<v8::Value> argv[]);
 
   const std::string GetName() { return name_; }
   PersistentContext GetContext() { return context_; }
@@ -25,8 +25,7 @@ class Filter {
   bool LoadProcessor(const char *fnName);
   bool Run(const char *processorName,
             const int argc,
-            v8::Handle<v8::Value> argv[],
-            v8::Local<v8::Value> &result);
+            v8::Handle<v8::Value> argv[]);
 
   v8::Handle<v8::Function> GetFunction(const char *fnName);
   // v8::Isolate* const GetIsolate() { return context_->GetIsolate(); }

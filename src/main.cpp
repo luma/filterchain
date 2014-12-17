@@ -33,17 +33,13 @@ int main(int argc, char *argv[]) {
     };
 
     printf("Process Incoming:\n");
-    if (!filters.ProcessIncoming(ARRAY_SIZE(args), args)) {
-      printf(" Discard Incoming Packet!\n");
-    } else {
-      printf(" Process Incoming Packet!\n");
+    if (filters.ProcessIncoming(ARRAY_SIZE(args), args)) {
+      printf("\nDiscarded some incoming packets!\n");
     }
 
     printf("\n\nProcess Outgoing:\n");
-    if (!filters.ProcessOutgoing(ARRAY_SIZE(args), args)) {
-      printf(" Discard Outgoing Packet\n");
-    } else {
-      printf(" Process Outgoing Packet\n");
+    if (filters.ProcessOutgoing(ARRAY_SIZE(args), args)) {
+      printf("\nDiscarded some outgoing packets!\n");
     }
   }
 

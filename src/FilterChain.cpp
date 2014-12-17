@@ -31,17 +31,8 @@ bool FilterChain::Add(const char *path) {
 bool FilterChain::ProcessIncoming(const int argc, v8::Handle<v8::Value> args[]) {
   // @todo refactor out duplication between ProcessIncoming and ProcessOutgoing
   for (auto &filter : filters_) {
-    v8::Local<v8::Value> result;
-    if (!filter.ProcessIncoming(argc, args, result)) {
-      // @todo handle error and bail?
-      return true;
-    }
-
-    // @todo do something with result?
-
-    // check if result is false, stop processing if it is
-    if (result->IsFalse()) {
-      printf("%s Incoming filter chain halted", filter.GetName().c_str());
+    if (!filter.ProcessIncoming(argc, args)) {
+      printf("\t%s Incoming filter chain halted\n", filter.GetName().c_str());
       return true;
     }
   }
@@ -52,18 +43,8 @@ bool FilterChain::ProcessIncoming(const int argc, v8::Handle<v8::Value> args[]) 
 bool FilterChain::ProcessOutgoing(const int argc, v8::Handle<v8::Value> args[]) {
   // @todo refactor out duplication between ProcessIncoming and ProcessOutgoing
   for (auto &filter : filters_) {
-    v8::Local<v8::Value> result;
-
-    if (!filter.ProcessOutgoing(argc, args, result)) {
-      // @todo handle error and bail?
-      return true;
-    }
-
-    // @todo do something with result?
-
-    // check if result is false, stop processing if it is
-    if (result->IsFalse()) {
-      printf("%s Outgoing filter chain halted", filter.GetName().c_str());
+    if (!filter.ProcessOutgoing(argc, args)) {
+      printf("\t%s Outgoing filter chain halted\n", filter.GetName().c_str());
       return true;
     }
   }

@@ -33,14 +33,39 @@ set (EXTRA_LIBS ${EXTRA_LIBS} filters)
 find_package(V8 REQUIRED)
 set (EXTRA_LIBS ${EXTRA_LIBS} ${V8_LIBRARY})
 
+# External projects
+add_subdirectory (ext)
+#include_directories (${PROJECT_BINARY_DIR}/ext/include)
+#link_directories (${PROJECT_BINARY_DIR}/ext/lib)
+
 # Find system LOG4CXX
 find_package(PkgConfig)
 pkg_check_modules(FILTERS_SYSTEM REQUIRED liblog4cxx)
 include_directories(${FILTERS_SYSTEM_INCLUDE_DIRS})
 link_directories(${FILTERS_SYSTEM_LIBRARY_DIRS})
 
+# gtest include and link directories
+externalproject_get_property (gtest-1.7.0 source_dir)
+externalproject_get_property (gtest-1.7.0 binary_dir)
+include_directories (${source_dir}/include)
+link_directories (${binary_dir})
+
+# gmock include and link directories
+externalproject_get_property (gmock-1.7.0 source_dir)
+externalproject_get_property (gmock-1.7.0 binary_dir)
+include_directories (${source_dir}/include)
+link_directories (${binary_dir})
+
 target_link_libraries (Filters ${EXTRA_LIBS})
 install (TARGETS Filters DESTINATION bin)
+
+
+# Test
+#include_directories(ext/gmock/include)
+#add_subdirectory(ext/gmock)
+
+enable_testing(true)
+add_subdirectory(test)
 
 # Add custom targets for tools
 

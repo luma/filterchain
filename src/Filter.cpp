@@ -220,13 +220,12 @@ bool Filter::LoadProcessor(const char *fnName) {
 
 bool Filter::Run(const char *processorName,
                  const int argc,
-                 v8::Handle<v8::Value> argv[],
-                 v8::Local<v8::Value> &result) {
+                 v8::Handle<v8::Value> argv[]) {
   auto processor = processors_.find(processorName);
 
   if (processor == processors_.end()) {
     printf("✘ Processor %s was not found in filter %s", processorName, name_.c_str());
-    return false;
+    return true;
   }
 
   // Create a handle scope to keep the temporary object references.
@@ -249,7 +248,7 @@ bool Filter::Run(const char *processorName,
     // Set up an exception handler before calling the handler function
     v8::TryCatch tryCatch;
 
-    result = process->Call(context->Global(), argc, argv);
+    v8::Local<v8::Value> result = process->Call(context->Global(), argc, argv);
 
     // context_->Exit();
 
@@ -257,17 +256,17 @@ bool Filter::Run(const char *processorName,
       ReportException(&tryCatch);
       return false;
     }
+
+    return !result->IsFalse();
   }
-
-  return true;
 }
 
-bool Filter::ProcessIncoming(const int argc, v8::Handle<v8::Value> argv[], v8::Local<v8::Value> &result) {
-  return Run("onIncomingPacket", argc, argv, result);
+bool Filter::ProcessIncoming(const int argc, v8::Handle<v8::Value> argv[]) {
+  return Run("onIncomingPacket", argc, argv);
 }
 
-bool Filter::ProcessOutgoing(const int argc, v8::Handle<v8::Value> argv[], v8::Local<v8::Value> &result) {
-  return Run("onOutgoingPacket", argc, argv, result);
+bool Filter::ProcessOutgoing(const int argc, v8::Handle<v8::Value> argv[]) {
+  return Run("onOutgoingPacket", argc, argv);
 }
 
 void Filter::ReportException(v8::TryCatch* tryCatch) {

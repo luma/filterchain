@@ -11,19 +11,19 @@ function meta() {
 // and so its length
 //
 // @param {Packet} packet
-//            packet Buffer with the data being processed.
+//            Packet with the data being processed.
 //
 // @return true to continue processing this packet and false to discard it.
 //
 function onIncomingPacket(packet) {
   echo('  ' + meta().name + '.processIncoming(', packet, ')');
-  return true;
+  return false;
 }
 
 // Process a new packet being sent.
 //
 // @param {Packet} packet
-//              packet Buffer with the data being processed.
+//              Packet with the data being processed.
 //
 // @return true to continue processing this packet and false to discard it.
 //
